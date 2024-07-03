@@ -8,10 +8,27 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        // '01': '#C67C4E',
+        // '02': '#EDD6C8',
+        // '03': '#313131',
+        // '04': '#E3E3E3',
+        // '05': '#F9F2ED'
+        brown: {
+          light: '#F9F2ED',
+          normal: '#C67C4E',
+          'normal-hover': '#B27046'
+        },
+        grey: {
+          light: '#A2A2A2',
+          'normal-active': '#830F0F'
+        },
+        surface: {
+          'light-active': '#E3E3E3'
+        }
+      },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
+        'home-background': "url('/home-background.jpg')"
       }
     }
   },

@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+// model users {
+//   id              Int         @id @default(autoincrement())
+//   name            String      @db.VarChar(255)
+//   email           String      @db.VarChar(255)
+//   image           String      @db.VarChar(255)
+//   hashed_password String      @db.VarChar(255)
+//   tea_notes       tea_notes[]
+// }
+
+model regions {
+  id        Int         @id @default(autoincrement())
+  country   country
+  province  province?
+  tea_notes tea_notes[]
+}
+
+// model infusions {
+//   id         Int         @id @default(autoincrement())
+//   brightness brightness
+//   clarity    clarity
+//   color      tea_color
+//   notes      String?     @db.VarChar(255)
+//   tea_notes  tea_notes[]
+// }
+
+// // model tea_aromas {
+// //   id           Int       @id @default(autoincrement())
+// //   tea_notes_id Int
+// //   tea_note     tea_notes @relation(fields: [tea_notes_id], references: [id])
+// //   dry_leaves   aroma
+// //   infusion     aroma
+// //   notes        String?   @db.VarChar(255)
+// // }
+
+model tea_notes {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  type        tea_type
+  region_id   Int
+  region      regions   @relation(fields: [region_id], references: [id])
+  price       Int
+  appearance  String    @db.VarChar(255)
+  rating      Float
+  // infusion_id Int
+  // infusion    infusions @relation(fields: [infusion_id], references: [id])
+  // user_id     Int
+  // user        users     @relation(fields: [user_id], references: [id])
+  // created_at  DateTime  @default(now())
+  // // aromas      tea_aromas[]
+}
+
+enum country {
+  china
+  taiwan
+  georgia
+  russia
+}
+
+enum province {
+  yunnan
+  guangdong
+  fujian
+  krasnodar
+}
+
+enum tea_type {
+  white
+  green
+  yellow
+  oolong
+  red
+  puerh
+  hei_cha
+}
+
+enum brightness {
+  bright
+  dull
+}
+
+enum clarity {
+  clear
+  cloudy
+}
+
+enum aroma {
+  fruity
+  berry
+  smoky
+}
+
+enum taste {
+  sweet
+  sour
+  salty
+  bitter
+  umami
+}
+
+enum tea_color {
+  green
+  light_green
+  cognac
+}

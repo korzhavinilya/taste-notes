@@ -13,7 +13,7 @@ import { usePathname } from 'next/navigation';
 import { Fragment, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { HiOutlineMenuAlt4 } from 'react-icons/hi';
-import useScrollingUp from '../hooks/useScrollingUp';
+import useScrollingUp from '../../hooks/useScrollingUp';
 
 type NavLink = {
   label: string;

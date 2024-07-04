@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prismaClient from '@/lib/prisma';
 import { Metadata } from 'next';
 import Form from './Form';
 
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CreateNotePage() {
-  const regions = await prisma.regions.findMany();
+  const regions = await prismaClient.regions.findMany();
 
   async function update(rating: number) {
     'use server';

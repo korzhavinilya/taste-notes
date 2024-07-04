@@ -1,5 +1,8 @@
-import prisma from './prisma';
+import { unstable_noStore as noStore } from 'next/cache';
+import prismaClient from './prisma';
 
 export async function fetchTeaNotes() {
-  return prisma.tea_notes.findMany({ include: { region: true } });
+  noStore();
+  
+  return prismaClient.tea_notes.findMany({ include: { region: true } });
 }

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { tea_type } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import prismaClient from './prisma';
 
 const TeaNoteSchema = z.object({
   name: z.string().min(1),
@@ -26,7 +27,7 @@ export async function createTeaNote(prevState: any, formData: FormData) {
         rating: formData.get('rating')
       });
 
-    await global.prisma?.tea_notes.create({
+    await prismaClient.tea_notes.create({
       data: {
         name,
         type: type as tea_type,
@@ -37,8 +38,8 @@ export async function createTeaNote(prevState: any, formData: FormData) {
       }
     });
 
-    revalidatePath('/notes');
-    redirect('/notes');
+    revalidatePath('notes');
+    redirect('notes');
   } catch (error) {
     if (error instanceof z.ZodError) {
       return error.issues.reduce((acc, cur) => {

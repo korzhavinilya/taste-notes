@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { tea_type } from '@prisma/client';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 const TeaNoteSchema = z.object({
   name: z.string().min(1),
@@ -36,6 +37,7 @@ export async function createTeaNote(prevState: any, formData: FormData) {
       }
     });
 
+    revalidatePath('/notes');
     redirect('/notes');
   } catch (error) {
     if (error instanceof z.ZodError) {

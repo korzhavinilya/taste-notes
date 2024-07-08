@@ -83,7 +83,7 @@ export default function FiltersForm({ className }: FiltersFormProps) {
                 </DisclosureButton>
               </h3>
               <DisclosurePanel className="pt-6">
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   {section.options.map((option, optionIdx) => (
                     <div key={option.value} className="flex items-center">
                       <input
@@ -102,7 +102,7 @@ export default function FiltersForm({ className }: FiltersFormProps) {
                       </label>
                     </div>
                   ))}
-                </div>
+                </div> */}
               </DisclosurePanel>
             </>
           )}

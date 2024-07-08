@@ -5,7 +5,7 @@ import { VscLoading } from 'react-icons/vsc';
 import { deleteTeaNote } from '@/lib/actions';
 
 interface DeleteButtonProps {
-  noteId: number;
+  noteId: string;
 }
 
 export default function DeleteButton({ noteId }: DeleteButtonProps) {

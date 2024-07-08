@@ -3,11 +3,12 @@ import TeaForm from './components/TeaForm';
 import prismaClient from '@/lib/prisma';
 
 export const metadata: Metadata = {
-  title: 'Create Tea Note | Taste Notes',
+  title: 'Create Tea Note | Taste Notes'
 };
 
 export default async function CreateNotesPage() {
-  const regions = await prismaClient.regions.findMany();
+  // const regions = await prismaClient.regions.findMany();
 
-  return <TeaForm regions={regions} />;
+  // return <TeaForm regions={regions} />;
+  return <TeaForm />;
 }

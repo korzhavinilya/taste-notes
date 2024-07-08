@@ -1,5 +1,3 @@
-import { ButtonLink } from '@/components/ButtonLink';
-
 export default function OnboardingPage() {
   return (
     <div className="h-full flex flex-col justify-end bg-home-background bg-no-repeat bg-cover bg-center">
@@ -11,7 +9,6 @@ export default function OnboardingPage() {
           Rate, review, and share your flavor experiences with fellow
           enthusiasts.
         </h2>
-        <ButtonLink href="/sign-in">Get Started</ButtonLink>
       </section>
     </div>
   );

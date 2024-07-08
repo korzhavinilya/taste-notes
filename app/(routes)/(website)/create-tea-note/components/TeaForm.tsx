@@ -3,7 +3,6 @@
 import React, { useOptimistic, useTransition } from 'react';
 import { HiOutlineArrowSmRight, HiOutlinePhotograph } from 'react-icons/hi';
 import { FaRegUserCircle } from 'react-icons/fa';
-import { impression, regions, tea_type } from '@prisma/client';
 import {
   FieldErrors,
   useForm,
@@ -19,10 +18,11 @@ import { TeaNoteSchema } from '@/lib/zod/schemas';
 import { VscLoading } from 'react-icons/vsc';
 
 interface TeaFormProps {
-  regions: regions[];
+  // regions: regions[];
 }
 
-export default function TeaForm({ regions }: TeaFormProps) {
+// export default function TeaForm({ regions }: TeaFormProps) {
+export default function TeaForm({}: TeaFormProps) {
   const formMethods = useForm<TeaNoteSchema>({
     mode: 'onChange',
     resolver: zodResolver(TeaNoteSchema),
@@ -106,7 +106,7 @@ export default function TeaForm({ regions }: TeaFormProps) {
                 Group
               </label>
 
-              <div className="mt-2">
+              {/* <div className="mt-2">
                 <select
                   id="group"
                   {...register('type')}
@@ -122,7 +122,7 @@ export default function TeaForm({ regions }: TeaFormProps) {
 
                 <span className="text-red-500 font-semibold text-sm">
                   <ErrorMessage name="type" errors={errors} />
-                </span>
+                </span> */}
               </div>
             </div>
 
@@ -134,7 +134,7 @@ export default function TeaForm({ regions }: TeaFormProps) {
                 Region
               </label>
 
-              <div className="mt-2">
+              {/* <div className="mt-2">
                 <select
                   id="region"
                   {...register('region_id')}
@@ -152,7 +152,7 @@ export default function TeaForm({ regions }: TeaFormProps) {
                   <ErrorMessage name="region_id" errors={errors} />
                 </span>
               </div>
-            </div>
+            </div> */}
 
             <div className="sm:col-span-2">
               <label
@@ -208,7 +208,7 @@ export default function TeaForm({ regions }: TeaFormProps) {
               </p>
             </div>
 
-            <fieldset className="col-span-full">
+            {/* <fieldset className="col-span-full">
               <legend className="text-sm font-medium leading-6 text-gray-900">
                 Impression
               </legend>
@@ -240,7 +240,7 @@ export default function TeaForm({ regions }: TeaFormProps) {
               <span className="text-red-500 font-semibold text-sm">
                 <ErrorMessage name="impression" errors={errors} />
               </span>
-            </fieldset>
+            </fieldset> */}
 
             {/* <div className="col-span-full">
               <label

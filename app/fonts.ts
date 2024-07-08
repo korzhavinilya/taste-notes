@@ -1,6 +1,6 @@
-import { Sora } from 'next/font/google';
+import { Urbanist } from 'next/font/google';
 
-export const sora = Sora({
+export const urbanist = Urbanist({
   weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin']
 });

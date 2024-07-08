@@ -9,6 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        gray: {
+          light: '#A1A1A1',
+          normal: '#2D2D2D'
+        },
         // '01': '#C67C4E',
         // '02': '#EDD6C8',
         // '03': '#313131',
@@ -19,16 +23,21 @@ const config: Config = {
           normal: '#C67C4E',
           'normal-hover': '#B27046'
         },
-        grey: {
-          light: '#A2A2A2',
-          'normal-active': '#830F0F'
-        },
         surface: {
           'light-active': '#E3E3E3'
+        },
+        objects: {
+          normal: '#9CABC2'
+        },
+        navigation: {
+          bg: '#1E1E1E',
+          icon: '#9DB2CE',
+          'icon-hover': '#386BF6',
+          button: '#613EEA'
         }
       },
       backgroundImage: {
-        'home-background': "url('/home-background.jpg')"
+        'home-background': "url('/public-access/home-background.jpg')"
       }
     }
   },

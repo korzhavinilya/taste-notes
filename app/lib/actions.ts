@@ -1,52 +1,101 @@
 'use server';
 
-import { z } from 'zod';
-import { tea_type } from '@prisma/client';
+import { ZodError, z } from 'zod';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import prismaClient from './prisma';
+import { ServerActionReturnType, TeaNoteSchema } from './zod/schemas';
+import {
+  RedirectType,
+  isRedirectError
+} from 'next/dist/client/components/redirect';
+import { auth, update } from '@/auth';
+import { Product, ProductName } from 'prisma/prisma-client';
+import { productPagesManifest } from '../constants/product-pages.manifest';
+import { User } from 'next-auth';
 
-const TeaNoteSchema = z.object({
-  name: z.string().min(1),
-  type: z.enum(Object.keys(tea_type) as [string, ...string[]]),
-  region_id: z.coerce.number().min(1),
-  price: z.coerce.number(),
-  appearance: z.string(),
-  rating: z.coerce.number()
-});
-
-export async function createTeaNote(prevState: any, formData: FormData) {
+export async function createTeaNote(
+  data: TeaNoteSchema
+): Promise<ServerActionReturnType> {
   try {
-    const { name, type, region_id, price, appearance, rating } =
-      TeaNoteSchema.parse({
-        name: formData.get('name'),
-        type: formData.get('type'),
-        region_id: formData.get('region_id'),
-        price: formData.get('price'),
-        appearance: formData.get('appearance'),
-        rating: formData.get('rating')
-      });
+    // const { name, type, region_id, price, appearance, impression } =
+    const { name, region_id, price, appearance } = TeaNoteSchema.parse(data);
 
-    await prismaClient.tea_notes.create({
+    await prismaClient.teaNote.create({
       data: {
         name,
-        type: type as tea_type,
-        region_id,
+        // type: type as tea_type,
+        // region_id,
         price,
-        appearance,
-        rating
+        product_id: '983abbfe-a106-4547-af4c-e64f7cce33a7'
+        // appearance
+        // impression: impression as impression
       }
     });
 
-    revalidatePath('notes');
-    redirect('notes');
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return error.issues.reduce((acc, cur) => {
-        return { ...acc, [cur.path[0]]: cur.message };
-      }, {} as { [field: string]: string | undefined });
+    revalidatePath('/alt/tea-notes');
+    redirect('/alt/tea-notes');
+  } catch (e) {
+    if (e instanceof ZodError) {
+      return {
+        status: 'error',
+        message: 'Invalid form data.',
+        errors: e.issues.map((issue) => ({
+          path: issue.path.join('.'),
+          message: `Server validation: ${issue.message}`
+        }))
+      };
     }
 
-    throw error;
+    if (isRedirectError(e)) {
+      console.log('catch redirect');
+      throw e;
+    }
+
+    return {
+      status: 'error',
+      message: 'Something went wrong. Please try again.'
+    };
   }
+}
+
+export async function deleteTeaNote(
+  id: string
+): Promise<ServerActionReturnType> {
+  try {
+    await prismaClient.teaNote.delete({ where: { id } });
+
+    revalidatePath('/tea-notes');
+
+    return {
+      status: 'success',
+      message: 'Tea deleted.'
+    };
+  } catch (e) {
+    return {
+      status: 'error',
+      message: 'Something went wrong. Please try again.'
+    };
+  }
+}
+
+export async function setDefaultProduct({
+  id,
+  name
+}: Product): Promise<ServerActionReturnType> {
+  const session = await auth();
+
+  await prismaClient.userSettings.update({
+    where: {
+      user_id: session?.user?.id!
+    },
+    data: {
+      default_product_id: id
+    }
+  });
+
+  const user = session?.user;
+  await update({ ...user, defaultProduct: name } as any);
+
+  redirect(productPagesManifest[name].path);
 }

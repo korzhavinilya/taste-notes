@@ -17,12 +17,12 @@ datasource db {
 //   tea_notes       tea_notes[]
 // }
 
-model regions {
-  id        Int         @id @default(autoincrement())
-  country   country
-  province  province?
-  tea_notes tea_notes[]
-}
+// model regions {
+//   id        Int         @id @default(autoincrement())
+//   country   country
+//   province  province?
+//   tea_notes tea_notes[]
+// }
 
 // model infusions {
 //   id         Int         @id @default(autoincrement())
@@ -42,73 +42,124 @@ model regions {
 // //   notes        String?   @db.VarChar(255)
 // // }
 
-model tea_notes {
-  id          Int       @id @default(autoincrement())
-  name        String    @db.VarChar(255)
-  type        tea_type
-  region_id   Int
-  region      regions   @relation(fields: [region_id], references: [id])
-  price       Int
-  appearance  String    @db.VarChar(255)
-  rating      Float
-  // infusion_id Int
-  // infusion    infusions @relation(fields: [infusion_id], references: [id])
-  // user_id     Int
-  // user        users     @relation(fields: [user_id], references: [id])
-  // created_at  DateTime  @default(now())
-  // // aromas      tea_aromas[]
+// model tea_notes {
+//   id         Int        @id @default(autoincrement())
+//   name       String     @db.VarChar(255) 
+//   // type       tea_type
+//   // region_id  Int
+//   // region     regions    @relation(fields: [region_id], references: [id])
+//   price      Int?
+//   // appearance String?     @db.VarChar(255)
+//   // rating      Float
+//   // impression impression
+//   // infusion_id Int
+//   // infusion    infusions @relation(fields: [infusion_id], references: [id])
+//   // user_id     Int
+//   // user        users     @relation(fields: [user_id], references: [id])
+//   // created_at  DateTime  @default(now())
+//   // // aromas      tea_aromas[]
+// }
+
+// enum country {
+//   china
+//   taiwan
+//   georgia
+//   russia
+// }
+
+// enum province {
+//   yunnan
+//   guangdong
+//   fujian
+//   krasnodar
+// }
+
+// enum tea_type {
+//   white
+//   green
+//   yellow
+//   oolong
+//   red
+//   puerh
+//   hei_cha
+// }
+
+// enum impression {
+//   ordinary
+//   curious
+//   exceptional
+// }
+
+// enum brightness {
+//   bright
+//   dull
+// }
+
+// enum clarity {
+//   clear
+//   cloudy
+// }
+
+// enum aroma {
+//   fruity
+//   berry
+//   smoky
+// }
+
+// enum taste {
+//   sweet
+//   sour
+//   salty
+//   bitter
+//   umami
+// }
+
+// enum tea_color {
+//   green
+//   light_green
+//   cognac
+// }
+
+enum Provider {
+  credentials
+  google
 }
 
-enum country {
-  china
-  taiwan
-  georgia
-  russia
+enum ProductName {
+  tea
+  coffee
 }
 
-enum province {
-  yunnan
-  guangdong
-  fujian
-  krasnodar
+model User {
+  id              String        @id @default(uuid())
+  username        String        @db.VarChar(255)
+  email           String        @unique @db.VarChar(255)
+  created_at      DateTime      @default(now())
+  provider        Provider
+  hashed_password String?
+  settings        UserSettings?
 }
 
-enum tea_type {
-  white
-  green
-  yellow
-  oolong
-  red
-  puerh
-  hei_cha
+model UserSettings {
+  id                 String   @id @default(uuid())
+  user_id            String   @unique
+  user               User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  default_product_id String?
+  default_product    Product? @relation(fields: [default_product_id], references: [id], onDelete: Cascade)
 }
 
-enum brightness {
-  bright
-  dull
+model Product {
+  id            String         @id @default(uuid())
+  name          ProductName    @unique
+  description   String         @db.VarChar(255)
+  user_settings UserSettings[]
+  tea_notes     TeaNote[]
 }
 
-enum clarity {
-  clear
-  cloudy
-}
-
-enum aroma {
-  fruity
-  berry
-  smoky
-}
-
-enum taste {
-  sweet
-  sour
-  salty
-  bitter
-  umami
-}
-
-enum tea_color {
-  green
-  light_green
-  cognac
+model TeaNote {
+  id         String  @id @default(uuid())
+  name       String  @db.VarChar(255)
+  price      Int?
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
 }

@@ -1,64 +1,66 @@
-import {
-  PrismaClient,
-  // brightness,
-  // clarity,
-  country,
-  province,
-  // tea_color,
-  tea_notes
-} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  await prisma.tea_notes.deleteMany();
-  await prisma.regions.deleteMany();
-  // await prisma.users.deleteMany();
+const userId = '12d9f43d-44e0-4b8b-ac62-4293bb322a5e';
+const userSettingsId = '9cc6085a-e3cd-410d-9c3e-2be9729ebdf2';
+const tea_productId = '983abbfe-a106-4547-af4c-e64f7cce33a7';
+const coffee_productId = '513a16fe-ba23-4217-a54c-e56j7cce33a7';
+const teaNoteId = 'fd3ac77e-3b61-4e95-8a1c-6edd974896d3';
 
-  const regions = await prisma.regions.createMany({
+async function main() {
+  await Promise.all([
+    prisma.teaNote.deleteMany(),
+    prisma.product.deleteMany(),
+    prisma.userSettings.deleteMany(),
+    prisma.user.deleteMany()
+  ]);
+
+  const users = await prisma.user.createMany({
     data: [
       {
-        id: 1,
-        country: 'china',
-        province: 'yunnan'
-      },
-      {
-        id: 2,
-        country: 'china',
-        province: 'guangdong'
+        id: userId,
+        username: 'Ilya Korzhavin',
+        email: 'cerber941@gmail.com',
+        provider: 'credentials'
       }
     ]
   });
-  console.log('regions', regions);
+  console.log('users', users);
 
-  // const user = await prisma.users.create({
-  //   data: {
-  //     name: 'Test User',
-  //     email: 'testuser@gmail.com',
-  //     image: '',
-  //     hashed_password: '123'
-  //   }
-  // });
-  // console.log('user', user);
-
-  const teaNotes = await prisma.tea_notes.createMany({
+  const settings = await prisma.userSettings.createMany({
     data: [
       {
-        name: 'Ми Лань Сян Дань Цун',
-        type: 'oolong',
-        price: 55,
-        rating: 5,
-        appearance:
-          'Длинные жгутики продольной скрутыки с зеленоватыми вкрапленияями.',
-        region_id: 2
+        id: userSettingsId,
+        user_id: userId
+      }
+    ]
+  });
+  console.log('settings', settings);
+
+  const products = await prisma.product.createMany({
+    data: [
+      {
+        id: tea_productId,
+        name: 'tea',
+        description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.'
       },
       {
-        name: 'Шоу Мэй',
-        type: 'white',
-        price: 34,
-        rating: 4.5,
-        appearance: 'Большие листья, аромат пожухлой листвы.',
-        region_id: 1
+        id: coffee_productId,
+        name: 'coffee',
+        description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.'
+      }
+    ]
+  });
+  console.log('products', products);
+
+  const teaNotes = await prisma.teaNote.createMany({
+    data: [
+      {
+        id: teaNoteId,
+        name: 'Дянь Хун',
+        price: 24,
+        product_id: tea_productId
       }
     ]
   });

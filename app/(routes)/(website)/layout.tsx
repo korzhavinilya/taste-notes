@@ -1,31 +1,20 @@
-import type { Metadata } from 'next';
-import { sora } from '@/fonts';
-import '../../globals.css';
-import Navbar from '@/components/Layout/Navbar';
+import Footer from '@/components_v2/Footer';
+import NavigationBar from '@/components_v2/NavigationBar';
+import React from 'react';
 
-export const metadata: Metadata = {
-  title: 'Taste Notes',
-  description: `Taste Notes is your personal companion for exploring and documenting the world of flavors. 
-    Whether you're a tea enthusiast, coffee connoisseur, or simply love trying new beverages, 
-    Taste Notes allows you to evaluate and review different products.`
-};
-
-export default function RootLayout({
+export default function WebsiteLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="h-dvh">
-        <Navbar />
+    <div className="h-full container max-w-7xl mx-auto flex flex-col px-8 pt-3">
+      <NavigationBar />
 
-        <main
-          className={`${sora.className} antialiased h-full pt-20 max-w-xl mx-auto`}
-        >
-          {children}
-        </main>
-      </body>
-    </html>
+      {/* <main className="w-full flex-grow mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 pb-28 sm:pb-8"> */}
+      <main className="flex-grow">{children}</main>
+
+      {/* <Footer /> */}
+    </div>
   );
 }

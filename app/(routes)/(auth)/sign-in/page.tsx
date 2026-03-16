@@ -1,9 +1,9 @@
 'use client';
 
-import { FaRegUserCircle } from 'react-icons/fa';
-import { MdLockOutline } from 'react-icons/md';
+// import { FaRegUserCircle } from 'react-icons/fa';
+// import { MdLockOutline } from 'react-icons/md';
 import Link from 'next/link';
-import SignWithProvidersList from '@/components_v2/SignWithProvidersList';
+import SignWithProvidersList from '@/components/SignWithProvidersList';
 
 export default function SignInPage() {
   return (
@@ -22,7 +22,7 @@ export default function SignInPage() {
             placeholder="Enter name of email"
             className="p-5 pl-14 rounded-2xl w-full placeholder:font-semibold placeholder:text-sm"
           />
-          <FaRegUserCircle className="size-6 absolute inset-y-1/3 ml-4 text-gray-normal" />
+          {/* <FaRegUserCircle className="size-6 absolute inset-y-1/3 ml-4 text-gray-normal" /> */}
         </div>
 
         <div className="relative mt-5">
@@ -31,7 +31,7 @@ export default function SignInPage() {
             placeholder="Enter password"
             className="p-5 pl-14 rounded-2xl w-full placeholder:font-semibold placeholder:text-sm"
           />
-          <MdLockOutline className="size-6 absolute inset-y-1/3 ml-4 text-gray-normal" />
+          {/* <MdLockOutline className="size-6 absolute inset-y-1/3 ml-4 text-gray-normal" /> */}
         </div>
 
         <Link href="#" className="mt-5 font-semibold text-xs underline">

@@ -8,73 +8,102 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-// model users {
-//   id              Int         @id @default(autoincrement())
-//   name            String      @db.VarChar(255)
-//   email           String      @db.VarChar(255)
-//   image           String      @db.VarChar(255)
-//   hashed_password String      @db.VarChar(255)
-//   tea_notes       tea_notes[]
+// Authentification
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("user")
+  accounts      Account[]
+  sessions      Session[]
+  // userSettings  UserSettings?
+  // teaNotes      TeaNote[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// Data
+
+// model UserSettings {
+//   id      String @id @default(cuid())
+//   user_id String @unique
+
+//   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+//   // default_product_id String?
+//   // default_product    Product? @relation(fields: [default_product_id], references: [id], onDelete: Cascade)
 // }
 
-// model regions {
-//   id        Int         @id @default(autoincrement())
-//   country   country
-//   province  province?
-//   tea_notes tea_notes[]
+// enum ProductName {
+//   tea
+//   coffee
 // }
 
-// model infusions {
-//   id         Int         @id @default(autoincrement())
-//   brightness brightness
-//   clarity    clarity
-//   color      tea_color
-//   notes      String?     @db.VarChar(255)
-//   tea_notes  tea_notes[]
+// model Product {
+//   id          String      @id @default(cuid())
+//   name        ProductName @unique
+//   description String      @db.VarChar(255)
+//   // user_settings UserSettings[]
+//   tea_notes   TeaNote[]
+
+//   created_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
 // }
 
-// // model tea_aromas {
-// //   id           Int       @id @default(autoincrement())
-// //   tea_notes_id Int
-// //   tea_note     tea_notes @relation(fields: [tea_notes_id], references: [id])
-// //   dry_leaves   aroma
-// //   infusion     aroma
-// //   notes        String?   @db.VarChar(255)
-// // }
+model Region {
+  id       String @id @default(cuid())
+  country  String
+  province String
 
-// model tea_notes {
-//   id         Int        @id @default(autoincrement())
-//   name       String     @db.VarChar(255) 
-//   // type       tea_type
-//   // region_id  Int
-//   // region     regions    @relation(fields: [region_id], references: [id])
-//   price      Int?
-//   // appearance String?     @db.VarChar(255)
-//   // rating      Float
-//   // impression impression
-//   // infusion_id Int
-//   // infusion    infusions @relation(fields: [infusion_id], references: [id])
-//   // user_id     Int
-//   // user        users     @relation(fields: [user_id], references: [id])
-//   // created_at  DateTime  @default(now())
-//   // // aromas      tea_aromas[]
-// }
+  products Product[]
 
-// enum country {
-//   china
-//   taiwan
-//   georgia
-//   russia
-// }
+  @@unique([country, province])
+}
 
-// enum province {
-//   yunnan
-//   guangdong
-//   fujian
-//   krasnodar
-// }
-
-// enum tea_type {
+// enum TeaGroup {
 //   white
 //   green
 //   yellow
@@ -84,82 +113,161 @@ datasource db {
 //   hei_cha
 // }
 
-// enum impression {
+// enum Quality {
+//   a
+//   aa
+//   aaa
+// }
+
+// enum Impression {
 //   ordinary
 //   curious
 //   exceptional
 // }
 
-// enum brightness {
-//   bright
-//   dull
-// }
-
-// enum clarity {
-//   clear
-//   cloudy
-// }
-
-// enum aroma {
+// enum Aroma {
 //   fruity
-//   berry
-//   smoky
+//   floral
 // }
 
-// enum taste {
-//   sweet
-//   sour
-//   salty
-//   bitter
-//   umami
+// model TeaColor {
+//   id   String @id @default(cuid())
+//   name String
+//   hex  String
+//   InfusionTaste InfusionTaste[]
 // }
 
-// enum tea_color {
-//   green
-//   light_green
-//   cognac
+// model TeaNote {
+//   id                        String          @id @default(cuid())
+//   name                      String          @db.VarChar(255)
+//   group                     TeaGroup
+//   price                     Int?
+//   region_id                 String
+//   product_id                String
+//   user_id                   String
+//   quality                   Quality?
+//   appearance                String?         @db.VarChar(255)
+//   impression                Impression
+//   dry_leaf_aromas           Aroma[]
+//   additional_dry_leaf_aroma String?
+//   is_favorite               Boolean    @default(false)
+//   infusionTastes            InfusionTaste[]
+
+//   region Region @relation(fields: [region_id], references: [id], onDelete: Cascade)
+//   product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+//   user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+//   created_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
 // }
 
-enum Provider {
-  credentials
-  google
-}
+// enum Teaware {
+//   gaiwan
+//   teapot
+//   tasters_mug
+// }
 
-enum ProductName {
-  tea
-  coffee
-}
+// model InfusionTaste {
+//   id                        String  @id @default(cuid())
+//   type                      Teaware
+//   tea_note_id               String
+//   infusion_aromas           Aroma[]
+//   additional_infusion_aroma String?
+//   color_id                  String?
 
-model User {
-  id              String        @id @default(uuid())
-  username        String        @db.VarChar(255)
-  email           String        @unique @db.VarChar(255)
-  created_at      DateTime      @default(now())
-  provider        Provider
-  hashed_password String?
-  settings        UserSettings?
-}
+//   tea_note TeaNote @relation(fields: [tea_note_id], references: [id], onDelete: Cascade)
+//   color    TeaColor? @relation(fields: [color_id], references: [id])
+// }
 
-model UserSettings {
-  id                 String   @id @default(uuid())
-  user_id            String   @unique
-  user               User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  default_product_id String?
-  default_product    Product? @relation(fields: [default_product_id], references: [id], onDelete: Cascade)
+model ProductCategory {
+  id   String @id @default(cuid())
+  name String @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  products Product[]
 }
 
 model Product {
-  id            String         @id @default(uuid())
-  name          ProductName    @unique
-  description   String         @db.VarChar(255)
-  user_settings UserSettings[]
-  tea_notes     TeaNote[]
+  id          String   @id @default(cuid())
+  name        String
+  category_id String
+  region_id   String
+  price       Int
+  link        String?
+  is_favorite Boolean? @default(false)
+  is_archived Boolean? @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  category ProductCategory @relation(fields: [category_id], references: [id])
+  region   Region          @relation(fields: [region_id], references: [id])
+
+  tea_characteristics TeaCharacteristics?
+  tea_note            TeaNote?
+}
+
+model TeaCharacteristics {
+  id         String  @id @default(cuid())
+  product_id String  @unique
+  type       String
+  season     String?
+  year       Int?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product Product @relation(fields: [product_id], references: [id])
 }
 
 model TeaNote {
-  id         String  @id @default(uuid())
-  name       String  @db.VarChar(255)
-  price      Int?
-  product_id String
-  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  id             String   @id @default(cuid())
+  product_id     String   @unique
+  appearance     String
+  dry_leaf_aroma String[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product            Product           @relation(fields: [product_id], references: [id])
+  infusion_tea_notes InfusionTeaNote[]
+}
+
+model InfusionTeaNote {
+  id                String   @id @default(cuid())
+  tea_note_id       String   @unique
+  brewing_method_id String
+  infusion          String
+  color             String
+  flavor            String[]
+  extractivity      String
+  body              String
+  taste             String[]
+  balance           String
+  bouquet           String
+  aftertaste        String
+  rating            Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  tea_note       TeaNote       @relation(fields: [tea_note_id], references: [id])
+  brewing_method BrewingMethod @relation(fields: [brewing_method_id], references: [id])
+}
+
+model BrewingMethod {
+  id                String  @id @default(cuid())
+  teaware           String
+  tea_weight        Int
+  water_volume      Int
+  water_temperature Int
+  brewing_time      Int?
+  is_steeping       Boolean
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  infusion_tea_note InfusionTeaNote[]
 }

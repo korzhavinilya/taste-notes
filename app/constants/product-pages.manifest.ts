@@ -1,11 +1,11 @@
 import { ProductName } from 'prisma/prisma-client';
-import { IconType } from 'react-icons';
-import { CiCoffeeCup } from 'react-icons/ci';
-import { GiTeapotLeaves } from 'react-icons/gi';
+// import { IconType } from 'react-icons';
+// import { CiCoffeeCup } from 'react-icons/ci';
+// import { GiTeapotLeaves } from 'react-icons/gi';
 
 type ProductManifest = {
   path: string;
-  icon: IconType;
+  // icon: IconType;
 };
 
 type ProductPagesManifest = {
@@ -15,11 +15,11 @@ type ProductPagesManifest = {
 export const productPagesManifest: ProductPagesManifest = {
   tea: {
     path: '/tea-notes',
-    icon: GiTeapotLeaves
+    // icon: GiTeapotLeaves
   },
   coffee: {
     path: '/coffee-notes',
-    icon: CiCoffeeCup
+    // icon: CiCoffeeCup
   }
 };
 

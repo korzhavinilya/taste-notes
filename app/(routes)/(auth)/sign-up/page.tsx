@@ -4,7 +4,7 @@ import { FaRegUserCircle } from 'react-icons/fa';
 import { MdLockOutline } from 'react-icons/md';
 import { MdOutlineMail } from 'react-icons/md';
 import Link from 'next/link';
-import SignWithProvidersList from '@/components_v2/SignWithProvidersList';
+import SignWithProvidersList from '@/components/SignWithProvidersList';
 
 export default function SignUpPage() {
   return (

@@ -1,45 +1,57 @@
-import { fetchTeaNotes } from '@/lib/data';
-import TeaNotesContent from './components/Content';
+import TeaProductListSkeleton from './components/tea-product-list-skeleton';
+import TeaProductSearch from './components/tea-product-search';
+import TeaProductsTable from './components/tea-product-table';
+import { FetchTeaProductsSearchParams } from '@/lib/data';
+import {
+  Box,
+  Container,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  Select,
+  TextField,
+  Typography
+} from '@mui/material';
+import { Suspense } from 'react';
 
-export default async function TeaNotesPage() {
-  const teaNotes = await fetchTeaNotes();
+import SortIcon from '@mui/icons-material/Sort';
+import AddNoteButton from './components/AddNoteButton';
 
-  // return <TeaNotesContent teaNotes={teaNotes} />;
-
-  return (
-    <>
-      <div className="mt-10 font-semibold text-center">
-        <h1 className="text-3xl">Tea Notes</h1>
-      </div>
-
-      <ul className="w-full lg:w-1/2 mt-12 mx-auto space-y-4">
-        <li>
-          <Card />
-        </li>
-
-        <li>
-          <Card />
-        </li>
-      </ul>
-    </>
-  );
+interface Props {
+  searchParams: FetchTeaProductsSearchParams;
 }
 
-function Card() {
+export default async function TeaProductsPage({ searchParams }: Props) {
   return (
-    <div className="text-base border border-gray-normal rounded-lg p-5">
-      <div>
-        <span className="font-semibold">Дянь Хун Мао Фэн</span>
-        <p className="mt-2 text-gray-normal">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
-          voluptatum tenetur illo ipsam.
-        </p>
-      </div>
+    <>
+      <Typography variant="h1" mt={2} mb={3}>
+        Tea notes
+      </Typography>
 
-      <div className="mt-2 flex justify-between text-gray-light">
-        <span>Тайвань, улун</span>
-        <span>Создан 04/22</span>
-      </div>
-    </div>
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <TeaProductSearch />
+
+        <TextField
+          size="small"
+          select
+          defaultValue={0}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SortIcon />
+              </InputAdornment>
+            )
+          }}
+        >
+          <MenuItem value={0}>By date</MenuItem>
+        </TextField>
+      </Box>
+
+      <Suspense key={searchParams.search} fallback={<TeaProductListSkeleton />}>
+        <TeaProductsTable searchParams={searchParams} />
+      </Suspense>
+
+      <AddNoteButton sx={{ position: 'absolute', bottom: 40, right: 40 }} />
+    </>
   );
 }

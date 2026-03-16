@@ -1,7 +1,9 @@
-import { urbanist } from '@/fonts';
 import type { Metadata } from 'next';
-import './globals.css';
 import AuthWrapper from './providers/AuthWrapper';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '@/theme';
+import { CssBaseline } from '@mui/material';
 
 export const metadata: Metadata = {
   title: 'Taste Notes',
@@ -17,11 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AuthWrapper>
-        <body className={`${urbanist.className} h-dvh antialiased`}>
-          {children}
-        </body>
-      </AuthWrapper>
+      <body>
+        <AuthWrapper>
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              {children}
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </AuthWrapper>
+      </body>
     </html>
   );
 }

@@ -1,4 +1,3 @@
-import NavigationBar from '@/components_v2/NavigationBar';
 import React from 'react';
 
 export default function AuthLayout({
